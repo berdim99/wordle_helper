@@ -2,8 +2,8 @@
 from typing import List
 
 
-WORD_LENGTH = 5
-MAX_WORDS_TO_SHOW = 10
+WORD_LENGTH = 5  # can be max of 9
+MAX_WORDS_TO_SHOW = 15
 WORDS_SOURCE = '/usr/share/dict/words'
 
 
@@ -61,11 +61,11 @@ def remove_words_with_char(words: List[str], char: str):
     print(f'Removed {len(words_to_remove)} words. Left: {len(words)}')
 
 
-def update_due_to_misplaced_char(words: List[str], misplaced_char: str):
-    position = validate_position(misplaced_char[0], prefix='?')
+def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char: str):
+    position = validate_position(position, prefix='?')
     if position == -1:
         return
-    char = validate_is_letter(misplaced_char[1])
+    char = validate_is_letter(misplaced_char)
     if char == '':
         return
 
@@ -84,12 +84,12 @@ def update_due_to_misplaced_char(words: List[str], misplaced_char: str):
     print(f'Removed {len(words_to_remove)} words. Left: {len(words)}')
 
 
-def update_due_to_found_char(words: List[str], found_char: str):
-    position = validate_position(found_char[0], prefix='+')
+def update_due_to_found_char(words: List[str], position: str, found_char: str):
+    position = validate_position(position, prefix='+')
     if position == -1:
         return
 
-    char = validate_is_letter(found_char[1])
+    char = validate_is_letter(found_char)
     if char == '':
         return
 
@@ -105,10 +105,11 @@ def update_due_to_found_char(words: List[str], found_char: str):
     print(f'Removed {len(words_to_remove)} words. Left: {len(words)}')
 
 
-def print_usage():
+def print_help():
     print('Usage: enter one of these commands:')
     print('\tshow or nothing: show word suggestions')
-    print('\tusage: show this help message')
+    print('\thelp: show this help message')
+    print('\treset: reset the words list')
     print('\tquit: quit the program')
     print('\t-{letter}: Remove all words with the given letter')
     print('\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all.'
@@ -119,28 +120,45 @@ def print_usage():
 
 def helper(words: List[str]):
     inp = ''
+    found_letters: List[str] = []
 
     while inp != 'quit':
-        inp = input('Enter your input:').strip()
+        if len(words) == 1:
+            print(f'\n\nThe word must be "{words[0]}"\n\n')
+
+        inp = input('Enter your input (type help for syntax):').strip()
         if inp == 'show' or inp == '':
             show_suggestions(words)
-        if inp == 'usage':
-            print_usage()
+        if inp == 'help':
+            print_help()
         elif inp == 'quit':
             pass
+        elif inp == 'reset':
+            words = get_words(WORD_LENGTH)
+            found_letters = []
+            print(f'Reset game. {len(words)} words loaded')
         elif len(inp) == 2 and inp.startswith('-'):
             # e.g '-A'
-            remove_words_with_char(words, inp[1:].upper())
+            letter = inp[1:].upper()
+            if letter in found_letters:
+                print(f'Not removing "{letter}" because it was previously found')
+            else:
+                # Don't remove letters that were previously found
+                remove_words_with_char(words, letter)
         elif len(inp) == 3 and inp.startswith('?'):
             # e.g '?3A'
-            update_due_to_misplaced_char(words, inp[1:].upper())
+            letter = inp[2:].upper()
+            found_letters.append(letter)
+            update_due_to_misplaced_char(words, inp[1], letter)
         elif len(inp) == 3 and inp.startswith('+'):
             # e.g '?3A'
-            update_due_to_found_char(words, inp[1:].upper())
+            letter = inp[2:].upper()
+            found_letters.append(letter)
+            update_due_to_found_char(words, inp[1], letter)
 
 
 if __name__ == '__main__':
-    print_usage()
+    print_help()
     found_words = get_words(WORD_LENGTH)
     print(f'Found {len(found_words)} {WORD_LENGTH} character words')
     helper(found_words)

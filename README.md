@@ -7,6 +7,9 @@ To run the program, run `python main.py` in a terminal. It was built with Python
 To use the helper, play World like you're used to, but after each guess, you can input your leanings to the helper,
 and it will show you a list of words you can choose from.
 
+To prevent removing words that should not be removed, start with the green (exact matches), then the partial matches, and only then the words
+that are not found at all.
+
 The list of words are taken from the default Mac/Linux words file (usually /usr/share/dict/words).
 Note that not all words in that file are used by the game, and possibly, the game might use words not in this file.
 
