@@ -42,14 +42,14 @@ def validate_position(char: str, prefix: str) -> int:
     if not char.isnumeric():
         print(
             f'Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c is a character. '
-            f"Try again"
+            f"Try again",
         )
         return -1
     position = int(char)
     if position < 1 or position > WORD_LENGTH:
         print(
             f'Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c is a character. '
-            f"Try again"
+            f"Try again",
         )
         return -1
     return position
@@ -130,14 +130,14 @@ def print_help():
     print("\tquit or exit: quit the program")
     print(
         "\t+{position}{letter}: Remove all words with the letter not in this position."
-        ' E.g "+3q" tells us that the letter "q" is in the word at the 3rd letter'
+        ' E.g "+3q" tells us that the letter "q" is in the word at the 3rd letter',
     )
     print(
         "\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all."
-        ' E.g "?3q" tells us that the letter "q" is in the word, but not the 3rd letter'
+        ' E.g "?3q" tells us that the letter "q" is in the word, but not the 3rd letter',
     )
     print(
-        "\t-{letters}: Remove all words with the given letters (one or more letters to remove)"
+        "\t-{letters}: Remove all words with the given letters (one or more letters to remove)",
     )
 
 
