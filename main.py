@@ -78,8 +78,8 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
     """remove all words where the misplaces char is at the given position, or words that don't
     have that char at all
     """
-    position = validate_position(position, prefix="?")
-    if position == -1:
+    position_int = validate_position(position, prefix="?")
+    if position_int == -1:
         return
     char = validate_is_letter(misplaced_char)
     if char == "":
@@ -90,8 +90,8 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
         # First, remove all the words without char
         if word.find(char.upper()) == -1:
             words_to_remove.append(word)
-        # Then, remove all the words where char is in "position"
-        if word[position - 1] == char:
+        # Then, remove all the words where char is in "position_int"
+        if word[position_int - 1] == char:
             words_to_remove.append(word)
 
     for word in words_to_remove:
@@ -102,8 +102,8 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
 
 def update_due_to_found_char(words: List[str], position: str, found_char: str):
     """remove all words where the found character is not in the given position"""
-    position = validate_position(position, prefix="+")
-    if position == -1:
+    position_int = validate_position(position, prefix="+")
+    if position_int == -1:
         return
 
     char = validate_is_letter(found_char)
@@ -113,7 +113,7 @@ def update_due_to_found_char(words: List[str], position: str, found_char: str):
     words_to_remove: List[str] = []
     for word in words:
         # remove all the words where char is not in "position"
-        if word[position - 1] != char:
+        if word[position_int - 1] != char:
             words_to_remove.append(word)
 
     for word in words_to_remove:
