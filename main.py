@@ -8,6 +8,7 @@ WORDS_SOURCE = '/usr/share/dict/words'
 
 
 def get_words(word_length: int) -> List[str]:
+    """ get the full list of 'word_length' words from the dictionary """
     words: List[str] = []
     with open(WORDS_SOURCE) as f:
         lines = f.readlines()
@@ -21,6 +22,7 @@ def get_words(word_length: int) -> List[str]:
 
 
 def show_suggestions(words: List[str]):
+    """ show a sample list of words left in the list """
     to_show = min(MAX_WORDS_TO_SHOW, len(words))
     print(f'Showing {to_show}/{len(words)} words')
     for i in range(to_show):
@@ -28,6 +30,7 @@ def show_suggestions(words: List[str]):
 
 
 def validate_is_letter(char: str) -> str:
+    """ verify that the given character is an alpha letter, return empty string otherwise """
     if char < 'A' or char > 'Z':
         print(f'Invalid char {char}. Must be a-z or A-Z. Try again')
         return ''
@@ -35,6 +38,7 @@ def validate_is_letter(char: str) -> str:
 
 
 def validate_position(char: str, prefix: str) -> int:
+    """ validate that the given character is a number between 1 and WORD_LENGTH. return -1 otherwise """
     if not char.isnumeric():
         print(f'Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c is a character. '
               f'Try again')
@@ -46,7 +50,9 @@ def validate_position(char: str, prefix: str) -> int:
         return -1
     return position
 
+
 def remove_words_with_char(words: List[str], char: str):
+    """ remove all words that have the given char in them from the given words list """
     if validate_is_letter(char) == '':
         return
 
@@ -62,6 +68,9 @@ def remove_words_with_char(words: List[str], char: str):
 
 
 def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char: str):
+    """ remove all words where the misplaces char is at the given position, or words that don't
+        have that char at all
+    """
     position = validate_position(position, prefix='?')
     if position == -1:
         return
@@ -85,6 +94,7 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
 
 
 def update_due_to_found_char(words: List[str], position: str, found_char: str):
+    """ remove all words where the found character is not in the given position """
     position = validate_position(position, prefix='+')
     if position == -1:
         return
@@ -160,5 +170,5 @@ def helper(words: List[str]):
 if __name__ == '__main__':
     print_help()
     found_words = get_words(WORD_LENGTH)
-    print(f'Found {len(found_words)} {WORD_LENGTH} character words')
+    print(f'Read {len(found_words)} {WORD_LENGTH} character words')
     helper(found_words)
