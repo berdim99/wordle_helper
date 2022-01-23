@@ -3,7 +3,7 @@ from typing import List
 
 
 WORD_LENGTH = 5  # can be max of 9
-MAX_WORDS_TO_SHOW = 25
+MAX_WORDS_TO_SHOW = 30
 WORDS_SOURCE = '/usr/share/dict/words'
 
 
@@ -123,7 +123,7 @@ def print_help():
     print('\tshow or nothing: show word suggestions')
     print('\thelp: show this help message')
     print('\treset: reset the words list')
-    print('\tquit: quit the program')
+    print('\tquit or exit: quit the program')
     print('\t+{position}{letter}: Remove all words with the letter not in this position.'
           ' E.g "+3q" tells us that the letter "q" is in the word at the 3rd letter')
     print('\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all.'
@@ -135,7 +135,7 @@ def helper(words: List[str]):
     inp = ''
     found_letters: List[str] = []
 
-    while inp != 'quit':
+    while inp != 'quit' and inp != 'exit':
         if len(words) == 1:
             print(f'\n\nThe word must be "{words[0]}"\n\n')
 
@@ -144,7 +144,7 @@ def helper(words: List[str]):
             show_suggestions(words)
         if inp == 'help':
             print_help()
-        elif inp == 'quit':
+        elif inp == 'quit' or inp == 'exit':
             pass
         elif inp == 'reset':
             words = get_words(WORD_LENGTH)
