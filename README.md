@@ -17,7 +17,7 @@ Brief usage:
 * Type "show" or enter to see a list of words (+ how many are left)
 * If a letter is found, type "+{position}{letter}" to remove all words where that letter is not in that position
 * If a letter is misplaced, type "?{position}{letter}" to remove all words without that letter, or if the letter is in that position.
-* If a letter is not in the word, type "-{letters}" to remove all words with the given letters from the list 
+* If a letter is not in the word, type "-{letters}" to remove all words with the given letters from the list
   (e.g "-ca" to remove the letters "c" and "a")
 
 
@@ -74,5 +74,3 @@ Enter your input (type help for syntax):quit                                    
 ```
 
 Lastly, this project was made for fun, use it if you will, at your own risk.
-
-
