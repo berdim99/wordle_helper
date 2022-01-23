@@ -51,20 +51,23 @@ def validate_position(char: str, prefix: str) -> int:
     return position
 
 
-def remove_words_with_char(words: List[str], char: str):
+def remove_words_with_chars(words: List[str], chars: List[str]):
     """ remove all words that have the given char in them from the given words list """
-    if validate_is_letter(char) == '':
-        return
+    removed = 0
+    for char in chars:
+        if validate_is_letter(char) == '':
+            continue
 
-    words_to_remove: List[str] = []
-    for word in words:
-        if word.find(char) > -1:
-            words_to_remove.append(word)
+        words_to_remove: List[str] = []
+        for word in words:
+            if word.find(char) > -1:
+                words_to_remove.append(word)
 
-    for word in words_to_remove:
-        words.remove(word)
+        removed += len(words_to_remove)
+        for word in words_to_remove:
+            words.remove(word)
 
-    print(f'Removed {len(words_to_remove)} words. Left: {len(words)}')
+    print(f'Removed {removed} words. Left: {len(words)}')
 
 
 def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char: str):
@@ -121,11 +124,11 @@ def print_help():
     print('\thelp: show this help message')
     print('\treset: reset the words list')
     print('\tquit: quit the program')
-    print('\t-{letter}: Remove all words with the given letter')
-    print('\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all.'
-          ' E.g "?3q" tells us that the letter "q" is in the word, but not the 3rd letter')
     print('\t+{position}{letter}: Remove all words with the letter not in this position.'
           ' E.g "+3q" tells us that the letter "q" is in the word at the 3rd letter')
+    print('\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all.'
+          ' E.g "?3q" tells us that the letter "q" is in the word, but not the 3rd letter')
+    print('\t-{letters}: Remove all words with the given letters (one or more letters to remove)')
 
 
 def helper(words: List[str]):
@@ -147,14 +150,18 @@ def helper(words: List[str]):
             words = get_words(WORD_LENGTH)
             found_letters = []
             print(f'Reset game. {len(words)} words loaded')
-        elif len(inp) == 2 and inp.startswith('-'):
-            # e.g '-A'
-            letter = inp[1:].upper()
-            if letter in found_letters:
-                print(f'Not removing "{letter}" because it was previously found')
+        elif len(inp) >= 2 and inp.startswith('-'):
+            # e.g '-A' or '-AB'
+            letters = inp[1:].upper()
+            to_remove_letters = []
+            for letter in letters:
+                if letter in found_letters:
+                    print(f'Not removing "{letter}" because it was previously found')
+                else:
+                    to_remove_letters.append(letter)
             else:
                 # Don't remove letters that were previously found
-                remove_words_with_char(words, letter)
+                remove_words_with_chars(words, to_remove_letters)
         elif len(inp) == 3 and inp.startswith('?'):
             # e.g '?3A'
             letter = inp[2:].upper()
