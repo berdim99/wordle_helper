@@ -14,12 +14,12 @@ The list of words are taken from the default Mac/Linux words file (usually /usr/
 Note that not all words in that file are used by the game, and possibly, the game might use words not in this file.
 
 Brief usage:
-* Type "show" or enter to see a list of words (+ how many are left)
-* If a letter is found, type "+{position}{letter}" to remove all words where that letter is not in that position
-* If a letter is misplaced, type "?{position}{letter}" to remove all words without that letter, or if the letter is in that position.
-* If a letter is not in the word, type "-{letters}" to remove all words with the given letters from the list
-  (e.g "-ca" to remove the letters "c" and "a")
 
+- Type "show" or enter to see a list of words (+ how many are left)
+- If a letter is found, type "+{position}{letter}" to remove all words where that letter is not in that position
+- If a letter is misplaced, type "?{position}{letter}" to remove all words without that letter, or if the letter is in that position.
+- If a letter is not in the word, type "-{letters}" to remove all words with the given letters from the list
+  (e.g "-ca" to remove the letters "c" and "a")
 
 Example run (spoiler for the 1/23/2022 game!)
 
