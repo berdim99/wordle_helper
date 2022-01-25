@@ -188,4 +188,7 @@ if __name__ == "__main__":
     print_help()
     found_words = get_words(WORD_LENGTH)
     print(f"Read {len(found_words)} {WORD_LENGTH} character words")
-    helper(found_words)
+    try:
+        helper(found_words)
+    except KeyboardInterrupt:
+        print("\nbye bye")
