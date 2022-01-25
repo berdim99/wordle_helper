@@ -7,6 +7,18 @@ MAX_WORDS_TO_SHOW = 30
 WORDS_SOURCE = "/usr/share/dict/words"
 
 
+class State:
+    found_letters: List[str] = []
+    words: List[str]
+
+    def __init__(self):
+        self.words = get_words(WORD_LENGTH)
+        print(f"Read {len(self.words)} {WORD_LENGTH} character words")
+
+    def words_count(self) -> int:
+        return len(self.words)
+
+
 def get_words(word_length: int) -> List[str]:
     """get the full list of 'word_length' words from the dictionary"""
     words: List[str] = []
@@ -21,12 +33,12 @@ def get_words(word_length: int) -> List[str]:
     return words
 
 
-def show_suggestions(words: List[str]):
+def show_suggestions(state: State):
     """show a sample list of words left in the list"""
-    to_show = min(MAX_WORDS_TO_SHOW, len(words))
-    print(f"Showing {to_show}/{len(words)} words")
+    to_show = min(MAX_WORDS_TO_SHOW, state.words_count())
+    print(f"Showing {to_show}/{state.words_count()} words")
     for i in range(to_show):
-        print(words[i])
+        print(state.words[i])
 
 
 def validate_is_letter(char: str) -> str:
@@ -55,7 +67,7 @@ def validate_position(char: str, prefix: str) -> int:
     return position
 
 
-def remove_words_with_chars(words: List[str], chars: List[str]):
+def remove_words_with_chars(state: State, chars: List[str]):
     """remove all words that have the given char in them from the given words list"""
     removed = 0
     for char in chars:
@@ -63,18 +75,18 @@ def remove_words_with_chars(words: List[str], chars: List[str]):
             continue
 
         words_to_remove: List[str] = []
-        for word in words:
+        for word in state.words:
             if word.find(char) > -1:
                 words_to_remove.append(word)
 
         removed += len(words_to_remove)
         for word in words_to_remove:
-            words.remove(word)
+            state.words.remove(word)
 
-    print(f"Removed {removed} words. Left: {len(words)}")
+    print(f"Removed {removed} words. Left: {state.words_count()}")
 
 
-def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char: str):
+def update_due_to_misplaced_char(state: State, position: str, misplaced_char: str):
     """remove all words where the misplaces char is at the given position, or words that don't
     have that char at all
     """
@@ -86,7 +98,7 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
         return
 
     words_to_remove: List[str] = []
-    for word in words:
+    for word in state.words:
         # First, remove all the words without char
         if word.find(char.upper()) == -1:
             words_to_remove.append(word)
@@ -95,12 +107,12 @@ def update_due_to_misplaced_char(words: List[str], position: str, misplaced_char
             words_to_remove.append(word)
 
     for word in words_to_remove:
-        words.remove(word)
+        state.words.remove(word)
 
-    print(f"Removed {len(words_to_remove)} words. Left: {len(words)}")
+    print(f"Removed {len(words_to_remove)} words. Left: {state.words_count()}")
 
 
-def update_due_to_found_char(words: List[str], position: str, found_char: str):
+def update_due_to_found_char(state: State, position: str, found_char: str):
     """remove all words where the found character is not in the given position"""
     position_int = validate_position(position, prefix="+")
     if position_int == -1:
@@ -111,15 +123,15 @@ def update_due_to_found_char(words: List[str], position: str, found_char: str):
         return
 
     words_to_remove: List[str] = []
-    for word in words:
+    for word in state.words:
         # remove all the words where char is not in "position"
         if word[position_int - 1] != char:
             words_to_remove.append(word)
 
     for word in words_to_remove:
-        words.remove(word)
+        state.words.remove(word)
 
-    print(f"Removed {len(words_to_remove)} words. Left: {len(words)}")
+    print(f"Removed {len(words_to_remove)} words. Left: {state.words_count()}")
 
 
 def print_help():
@@ -141,54 +153,50 @@ def print_help():
     )
 
 
-def helper(words: List[str]):
+def helper(state: State):
     inp = ""
-    found_letters: List[str] = []
 
     while inp != "quit" and inp != "exit":
-        if len(words) == 1:
-            print(f'\n\nThe word must be "{words[0]}"\n\n')
+        if state.words_count() == 1:
+            print(f'\n\nThe word must be "{state.words[0]}"\n\n')
 
         inp = input("Enter your input (type help for syntax):").strip()
         if inp == "show" or inp == "":
-            show_suggestions(words)
+            show_suggestions(state)
         if inp == "help":
             print_help()
         elif inp == "quit" or inp == "exit":
             pass
         elif inp == "reset":
-            words = get_words(WORD_LENGTH)
-            found_letters = []
-            print(f"Reset game. {len(words)} words loaded")
+            print("Resetting helper")
+            state = State()
         elif len(inp) >= 2 and inp.startswith("-"):
             # e.g '-A' or '-AB'
             letters = inp[1:].upper()
             to_remove_letters = []
             for letter in letters:
-                if letter in found_letters:
+                if letter in state.found_letters:
                     print(f'Not removing "{letter}" because it was previously found')
                 else:
                     to_remove_letters.append(letter)
             else:
                 # Don't remove letters that were previously found
-                remove_words_with_chars(words, to_remove_letters)
+                remove_words_with_chars(state, to_remove_letters)
         elif len(inp) == 3 and inp.startswith("?"):
             # e.g '?3A'
             letter = inp[2:].upper()
-            found_letters.append(letter)
-            update_due_to_misplaced_char(words, inp[1], letter)
+            state.found_letters.append(letter)
+            update_due_to_misplaced_char(state, inp[1], letter)
         elif len(inp) == 3 and inp.startswith("+"):
             # e.g '?3A'
             letter = inp[2:].upper()
-            found_letters.append(letter)
-            update_due_to_found_char(words, inp[1], letter)
+            state.found_letters.append(letter)
+            update_due_to_found_char(state, inp[1], letter)
 
 
 if __name__ == "__main__":
     print_help()
-    found_words = get_words(WORD_LENGTH)
-    print(f"Read {len(found_words)} {WORD_LENGTH} character words")
     try:
-        helper(found_words)
+        helper(State())
     except KeyboardInterrupt:
         print("\nbye bye")
