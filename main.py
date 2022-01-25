@@ -1,6 +1,5 @@
 # Press ⌃R to execute it or replace it with your code.
-from typing import List
-
+from typing import List, Dict, Tuple
 
 WORD_LENGTH = 5  # can be max of 9
 MAX_WORDS_TO_SHOW = 30
@@ -13,10 +12,35 @@ class State:
 
     def __init__(self):
         self.words = get_words(WORD_LENGTH)
+        self.found_letters = []
         print(f"Read {len(self.words)} {WORD_LENGTH} character words")
 
     def words_count(self) -> int:
         return len(self.words)
+
+    def show_suggestions(self):
+        """show a sample list of words left in the list"""
+        to_show = min(MAX_WORDS_TO_SHOW, self.words_count())
+        print(f"Showing {to_show}/{self.words_count()} words")
+        for i in range(to_show):
+            print(self.words[i])
+
+        print(f"Most popular letters (minus found ones): {self.popular_letters()}")
+
+    def popular_letters(self) -> List[Tuple[str, int]]:
+        letter_to_count: Dict[str, int] = {}
+        for word in self.words:
+            for char in word:
+                if char in letter_to_count:
+                    letter_to_count[char] += 1
+                else:
+                    letter_to_count[char] = 1
+
+        for letter in self.found_letters:
+            if letter in letter_to_count:
+                del letter_to_count[letter]
+        sorted_map = sorted(letter_to_count.items(), key=lambda x: x[1], reverse=True)
+        return sorted_map[:5]
 
 
 def get_words(word_length: int) -> List[str]:
@@ -31,14 +55,6 @@ def get_words(word_length: int) -> List[str]:
             words.append(stripped_word.upper())
 
     return words
-
-
-def show_suggestions(state: State):
-    """show a sample list of words left in the list"""
-    to_show = min(MAX_WORDS_TO_SHOW, state.words_count())
-    print(f"Showing {to_show}/{state.words_count()} words")
-    for i in range(to_show):
-        print(state.words[i])
 
 
 def validate_is_letter(char: str) -> str:
@@ -162,7 +178,7 @@ def helper(state: State):
 
         inp = input("Enter your input (type help for syntax):").strip()
         if inp == "show" or inp == "":
-            show_suggestions(state)
+            state.show_suggestions()
         if inp == "help":
             print_help()
         elif inp == "quit" or inp == "exit":
