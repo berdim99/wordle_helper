@@ -25,7 +25,12 @@ class State:
         for i in range(to_show):
             print(self.words[i])
 
-        print(f"Most popular letters (minus found ones): {self.popular_letters()}")
+        formatted_letters = []
+        for letter_count in self.popular_letters():
+            formatted_letters.append(f"{letter_count[0]}: {letter_count[1]}")
+        print(
+            f"Most popular letters (minus found ones): {', '.join(formatted_letters)}",
+        )
 
     def popular_letters(self) -> List[Tuple[str, int]]:
         letter_to_count: Dict[str, int] = {}
