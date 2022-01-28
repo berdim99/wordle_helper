@@ -20,13 +20,32 @@ class State:
 
     def show_suggestions(self):
         """show a sample list of words left in the list"""
+        popular_letters_count = self.popular_letters()
+        popular_letters = []
+        for letter_count in popular_letters_count:
+            popular_letters.append(letter_count[0])
+        words_with_popular_letters = []
+        for word in self.words:
+            for popular_letter in popular_letters:
+                if popular_letter in word:
+                    words_with_popular_letters.append(word)
+                    break
+
         to_show = min(MAX_WORDS_TO_SHOW, self.words_count())
-        print(f"Showing {to_show}/{self.words_count()} words")
-        for i in range(to_show):
-            print(self.words[i])
+
+        if len(words_with_popular_letters) > to_show:
+            print(
+                f"Showing {to_show}/{self.words_count()} words (words with popular letters)",
+            )
+            for i in range(to_show):
+                print(words_with_popular_letters[i])
+        else:
+            print(f"Showing {to_show}/{self.words_count()} words")
+            for i in range(to_show):
+                print(self.words[i])
 
         formatted_letters = []
-        for letter_count in self.popular_letters():
+        for letter_count in popular_letters_count:
             formatted_letters.append(f"{letter_count[0]}: {letter_count[1]}")
         print(
             f"Most popular letters (minus found ones): {', '.join(formatted_letters)}",
