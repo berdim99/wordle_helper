@@ -6,6 +6,33 @@ MAX_WORDS_TO_SHOW = 30
 WORDS_SOURCE = "words.txt"
 
 
+class PopularSort:
+    popular_letters: Dict[str, int] = {}
+    max_count = 0
+
+    def __init__(self, popular_letters: List[Tuple[str, int]]):
+        for letter_count in popular_letters:
+            if letter_count[1] > self.max_count:
+                self.max_count = letter_count[1]
+            self.popular_letters[letter_count[0]] = letter_count[1]
+
+    def sort(self, word: str):
+        """sorted key function that promotes words with the most popular letters in them, while reducing the
+        weight of words where the same letter appear multiple times
+        """
+        count = 0
+        found_letters = set()
+        for letter in word:
+            if letter in found_letters:
+                count -= self.max_count
+            else:
+                found_letters.add(letter)
+
+            if letter in self.popular_letters:
+                count += self.popular_letters[letter]
+        return count
+
+
 class State:
     found_letters: List[str] = []
     words: List[str]
@@ -32,17 +59,20 @@ class State:
                     break
 
         to_show = min(MAX_WORDS_TO_SHOW, self.words_count())
+        sorter = PopularSort(popular_letters_count)
 
         if len(words_with_popular_letters) > to_show:
             print(
                 f"Showing {to_show}/{self.words_count()} words (words with popular letters)",
             )
+            s = sorted(words_with_popular_letters, key=sorter.sort, reverse=True)
             for i in range(to_show):
-                print(words_with_popular_letters[i])
+                print(s[i])
         else:
             print(f"Showing {to_show}/{self.words_count()} words")
+            s = sorted(self.words, key=sorter.sort, reverse=True)
             for i in range(to_show):
-                print(self.words[i])
+                print(s[i])
 
         formatted_letters = []
         for letter_count in popular_letters_count:
