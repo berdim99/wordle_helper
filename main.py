@@ -8,13 +8,14 @@ WORDS_SOURCE = "words.txt"
 
 class PopularSort:
     popular_letters: Dict[str, int] = {}
-    max_count = 0
+    avg_count = 0
 
     def __init__(self, popular_letters: List[Tuple[str, int]]):
+        max_count = 0
         for letter_count in popular_letters:
-            if letter_count[1] > self.max_count:
-                self.max_count = letter_count[1]
+            max_count += letter_count[1]
             self.popular_letters[letter_count[0]] = letter_count[1]
+        self.avg_count = int(max_count / len(popular_letters))
 
     def sort(self, word: str):
         """sorted key function that promotes words with the most popular letters in them, while reducing the
@@ -24,7 +25,7 @@ class PopularSort:
         found_letters = set()
         for letter in word:
             if letter in found_letters:
-                count -= self.max_count
+                count -= self.avg_count
             else:
                 found_letters.add(letter)
 
