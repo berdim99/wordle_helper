@@ -26,7 +26,7 @@ class PopularSort:
         found_letters = set()
         for letter in word:
             if letter in found_letters:
-                count -= self.avg_count
+                count -= self.avg_count * 5
             else:
                 found_letters.add(letter)
 
