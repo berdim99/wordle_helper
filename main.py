@@ -1,4 +1,5 @@
 from typing import List, Dict, Tuple
+import webbrowser
 
 WORD_LENGTH = 5  # can be max of 9
 MAX_WORDS_TO_SHOW = 30
@@ -222,6 +223,15 @@ def print_help():
     print(
         "\t-{letters}: Remove all words with the given letters (one or more letters to remove)",
     )
+    print(
+        "\tdefine [word]: Open the dictionary to define a word. If only one word is left, "
+        "you can omit the word argument from the command",
+    )
+
+
+def define(word: str) -> None:
+    print(f"Defining word: {word}")
+    webbrowser.open(f"https://www.dictionary.com/browse/{word}")
 
 
 def helper(state: State):
@@ -241,6 +251,15 @@ def helper(state: State):
         elif inp == "reset":
             print("Resetting helper")
             state = State()
+        elif inp.startswith("define"):
+            if state.words_count() == 1:
+                define(state.words[0])
+            else:
+                inp_words = inp.split(" ")
+                if len(inp_words) == 2:
+                    define(inp_words[1])
+                else:
+                    print('Usage is: "define <word>"')
         elif len(inp) >= 2 and inp.startswith("-"):
             # e.g '-A' or '-AB'
             letters = inp[1:].upper()
