@@ -1,15 +1,17 @@
 from typing import Dict, List, Tuple
 
+from letter_count import LetterCount
+
 
 class PopularSort:
     popular_letters: Dict[str, int] = {}
     avg_count = 0
 
-    def __init__(self, popular_letters: List[Tuple[str, int]]):
+    def __init__(self, popular_letters: List[LetterCount]):
         max_count = 0
-        for letter_count in popular_letters:
-            max_count += letter_count[1]
-            self.popular_letters[letter_count[0]] = letter_count[1]
+        for i in popular_letters:
+            max_count += i.count
+            self.popular_letters[i.letter] = i.count
         self.avg_count = int(max_count / len(popular_letters))
 
     def sort(self, word: str):

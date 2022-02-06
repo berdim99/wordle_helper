@@ -1,7 +1,8 @@
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
 import constants
 import popular_sort
+from letter_count import LetterCount
 
 
 def get_words(word_length: int) -> List[str]:
@@ -34,8 +35,8 @@ class State:
         """show a sample list of words left in the list"""
         popular_letters_count = self.popular_letters()
         popular_letters = []
-        for letter_count in popular_letters_count:
-            popular_letters.append(letter_count[0])
+        for i in popular_letters_count:
+            popular_letters.append(i.letter)
         words_with_popular_letters = []
         for word in self.words:
             for popular_letter in popular_letters:
@@ -60,13 +61,14 @@ class State:
                 print(s[i])
 
         formatted_letters = []
-        for letter_count in popular_letters_count:
-            formatted_letters.append(f"{letter_count[0]}: {letter_count[1]}")
+        for i in popular_letters_count:
+            formatted_letters.append(f"{i.letter}: {i.count}")
         print(
             f"Most popular letters (minus found ones): {', '.join(formatted_letters)}",
         )
 
-    def popular_letters(self) -> List[Tuple[str, int]]:
+    def popular_letters(self) -> List[LetterCount]:
+        """Return a list of up to the top 5 popular letters from the remaining words"""
         letter_to_count: Dict[str, int] = {}
         for word in self.words:
             for char in word:
@@ -79,4 +81,7 @@ class State:
             if letter in letter_to_count:
                 del letter_to_count[letter]
         sorted_map = sorted(letter_to_count.items(), key=lambda x: x[1], reverse=True)
-        return sorted_map[:5]
+        out: List[LetterCount] = []
+        for key, value in sorted_map[:5]:
+            out.append(LetterCount(key, value))
+        return out
