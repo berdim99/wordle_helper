@@ -1,8 +1,22 @@
+import random
 from typing import List, Dict
 
 import constants
 import popular_sort
-from letter_count import LetterCount
+
+
+def count_letters_frequency(words: List[str]) -> Dict[str, List[int]]:
+    out: Dict[str, List[int]] = {}
+    for word in words:
+        pos = 0
+        for letter in word:
+            if letter not in out:
+                out[letter] = [0, 0, 0, 0, 0]  # TODO use word length
+
+            out[letter][pos] += 1
+            pos += 1
+
+    return out
 
 
 def get_words(word_length: int) -> List[str]:
@@ -33,55 +47,28 @@ class State:
 
     def show_suggestions(self):
         """show a sample list of words left in the list"""
-        popular_letters_count = self.popular_letters()
-        popular_letters = []
-        for i in popular_letters_count:
-            popular_letters.append(i.letter)
-        words_with_popular_letters = []
-        for word in self.words:
-            for popular_letter in popular_letters:
-                if popular_letter in word:
-                    words_with_popular_letters.append(word)
-                    break
-
+        letter_freq = count_letters_frequency(self.words)
         to_show = min(constants.MAX_WORDS_TO_SHOW, self.words_count())
-        sorter = popular_sort.PopularSort(popular_letters_count)
-
-        if len(words_with_popular_letters) > to_show:
-            print(
-                f"Showing {to_show}/{self.words_count()} words (words with popular letters)",
-            )
-            s = sorted(words_with_popular_letters, key=sorter.sort, reverse=True)
-            for i in range(to_show):
-                print(s[i])
+        use_random_order = self.words_count() < 10
+        if use_random_order:
+            random.shuffle(self.words)
+            s = self.words
         else:
-            print(f"Showing {to_show}/{self.words_count()} words")
+            sorter = popular_sort.PopularSort(letter_freq, len(self.words))
             s = sorted(self.words, key=sorter.sort, reverse=True)
-            for i in range(to_show):
-                print(s[i])
 
-        formatted_letters = []
-        for i in popular_letters_count:
-            formatted_letters.append(f"{i.letter}: {i.count}")
         print(
-            f"Most popular letters (minus found ones): {', '.join(formatted_letters)}",
+            f"Showing {to_show}/{self.words_count()} words {'in random order' if use_random_order else ''}",
         )
+        for i in range(to_show):
+            word = s[i]
+            pos = 0
+            freq_str = []
+            total = 0
+            for letter in word:
+                freq = letter_freq[letter][pos]
+                total += freq
+                freq_str.append(f"{letter}: {freq}")
+                pos += 1
 
-    def popular_letters(self) -> List[LetterCount]:
-        """Return a list of up to the top 5 popular letters from the remaining words"""
-        letter_to_count: Dict[str, int] = {}
-        for word in self.words:
-            for char in word:
-                if char in letter_to_count:
-                    letter_to_count[char] += 1
-                else:
-                    letter_to_count[char] = 1
-
-        for letter in self.found_letters:
-            if letter in letter_to_count:
-                del letter_to_count[letter]
-        sorted_map = sorted(letter_to_count.items(), key=lambda x: x[1], reverse=True)
-        out: List[LetterCount] = []
-        for key, value in sorted_map[:5]:
-            out.append(LetterCount(key, value))
-        return out
+            print(f"{word} | {', '.join(freq_str)} | total: {total}")
