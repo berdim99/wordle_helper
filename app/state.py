@@ -49,13 +49,14 @@ class State:
         """show a sample list of words left in the list"""
         letter_freq = count_letters_frequency(self.words)
         to_show = min(constants.MAX_WORDS_TO_SHOW, self.words_count())
-        use_random_order = self.words_count() < 10
+
+        sorter = popular_sort.PopularSort(letter_freq, len(self.words))
+        s = sorted(self.words, key=sorter.sort, reverse=True)
+
+        use_random_order = len(sorter.sort_distribution.keys()) == 1
         if use_random_order:
             random.shuffle(self.words)
             s = self.words
-        else:
-            sorter = popular_sort.PopularSort(letter_freq, len(self.words))
-            s = sorted(self.words, key=sorter.sort, reverse=True)
 
         print(
             f"Showing {to_show}/{self.words_count()} words {'in random order' if use_random_order else ''}",
