@@ -6,11 +6,18 @@ import logger
 from constants import WORD_LENGTH
 from state import State
 
+from colorama import init, Fore, Back, Style
+
+
+init()
+
 
 def validate_is_letter(char: str) -> str:
     """verify that the given character is an alpha letter, return empty string otherwise"""
     if char < "A" or char > "Z":
-        print(f"Invalid char {char}. Must be a-z or A-Z. Try again")
+        print(
+            f"{Fore.RED}Invalid char {char}. Must be a-z or A-Z. Try again{Style.RESET_ALL}",
+        )
         return ""
     return char
 
@@ -19,15 +26,15 @@ def validate_position(char: str, prefix: str) -> int:
     """validate that the given character is a number between 1 and WORD_LENGTH. return -1 otherwise"""
     if not char.isnumeric():
         print(
-            f'Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c is a character. '
-            f"Try again",
+            f'{Fore.RED}Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
+            f"is a character. Try again{Style.RESET_ALL}",
         )
         return -1
     position = int(char)
     if position < 1 or position > WORD_LENGTH:
         print(
-            f'Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c is a character. '
-            f"Try again",
+            f'{Fore.RED}Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
+            f"is a character. Try again{Style.RESET_ALL}",
         )
         return -1
     return position
@@ -101,6 +108,7 @@ def update_due_to_found_char(state: State, position: str, found_char: str):
 
 
 def print_help():
+    print("")
     print("Usage: enter one of these commands:")
     print("\tshow or nothing: show word suggestions")
     print("\thelp: show this help message")
@@ -135,7 +143,9 @@ def helper(state: State):
         if state.words_count() == 1:
             print(f'\n\nThe word must be "{state.words[0]}"\n\n')
 
-        inp = input("Enter your input (type help for syntax):").strip()
+        inp = input(
+            f"{Fore.GREEN}Enter your input (type help for syntax):{Style.RESET_ALL}",
+        ).strip()
         if inp == "show" or inp == "":
             state.show_suggestions()
         if inp == "help":
@@ -143,7 +153,7 @@ def helper(state: State):
         elif inp == "quit" or inp == "exit":
             pass
         elif inp == "reset":
-            print("Resetting helper")
+            print(f"{Fore.GREEN}Resetting helper{Style.RESET_ALL}")
             state = State(state.logger)
         elif inp.startswith("define"):
             if state.words_count() == 1:
@@ -160,7 +170,9 @@ def helper(state: State):
             to_remove_letters = []
             for letter in letters:
                 if letter in state.found_letters:
-                    print(f'Not removing "{letter}" because it was previously found')
+                    print(
+                        f'{Fore.RED}Not removing "{letter}" because it was previously found{Style.RESET_ALL}',
+                    )
                 else:
                     to_remove_letters.append(letter)
             else:

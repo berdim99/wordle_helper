@@ -2,7 +2,13 @@
 
 Help find words for the https://www.powerlanguage.co.uk/wordle/ game
 
-To run the program, run `python main.py` in a terminal. It was built with Python 3.8.9
+To run the program, install the dependent packages using this command (better use a venv):
+
+```shell
+pip install -r ./requirements.txt
+```
+
+And then run `python main.py` in a terminal. It was built with Python 3.8.9
 
 To use the helper, play Wordle like you're used to, but after each guess, you can input your leanings to the helper,
 and it will show you a list of words you can choose from.

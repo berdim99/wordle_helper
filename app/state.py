@@ -1,6 +1,8 @@
 import random
 from typing import List, Dict
 
+from colorama import Fore, Style
+
 import constants
 import logger
 import popular_sort
@@ -61,7 +63,8 @@ class State:
             s = self.words
 
         self.logger.info(
-            f"Showing {to_show}/{self.words_count()} words {'in random order' if use_random_order else ''}",
+            f"Showing {to_show}/{self.words_count()} words "
+            f"{f'{Style.BRIGHT}{Fore.MAGENTA}in random order{Style.RESET_ALL}' if use_random_order else ''}",
         )
         for i in range(to_show):
             word = s[i]
