@@ -1,5 +1,7 @@
+import sys
 from typing import List
 import webbrowser
+import logger
 
 from constants import WORD_LENGTH
 from state import State
@@ -142,7 +144,7 @@ def helper(state: State):
             pass
         elif inp == "reset":
             print("Resetting helper")
-            state = State()
+            state = State(state.logger)
         elif inp.startswith("define"):
             if state.words_count() == 1:
                 define(state.words[0])
@@ -178,7 +180,11 @@ def helper(state: State):
 
 if __name__ == "__main__":
     print_help()
+    is_debug = "-d" in sys.argv
     try:
-        helper(State())
+        logger = logger.Logger(
+            logger.LogLevel.DEBUG if is_debug else logger.LogLevel.INFO,
+        )
+        helper(State(logger))
     except KeyboardInterrupt:
         print("\nbye bye")

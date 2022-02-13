@@ -2,6 +2,7 @@ import random
 from typing import List, Dict
 
 import constants
+import logger
 import popular_sort
 
 
@@ -37,7 +38,8 @@ class State:
     found_letters: List[str] = []
     words: List[str]
 
-    def __init__(self):
+    def __init__(self, logger: logger.Logger):
+        self.logger = logger
         self.words = get_words(constants.WORD_LENGTH)
         self.found_letters = []
         print(f"Read {len(self.words)} {constants.WORD_LENGTH} character words")
@@ -58,7 +60,7 @@ class State:
             random.shuffle(self.words)
             s = self.words
 
-        print(
+        self.logger.info(
             f"Showing {to_show}/{self.words_count()} words {'in random order' if use_random_order else ''}",
         )
         for i in range(to_show):
@@ -72,4 +74,7 @@ class State:
                 freq_str.append(f"{letter}: {freq}")
                 pos += 1
 
-            print(f"{word} | {', '.join(freq_str)} | total: {total}")
+            if self.logger.is_debug_enabled():
+                self.logger.debug(f"{word} | {', '.join(freq_str)} | total: {total}")
+            else:
+                self.logger.info(word)
