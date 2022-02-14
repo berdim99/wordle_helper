@@ -64,7 +64,7 @@ class State:
 
         self.logger.info(
             f"Showing {to_show}/{self.words_count()} words "
-            f"{f'{Style.BRIGHT}{Fore.MAGENTA}in random order{Style.RESET_ALL}' if use_random_order else ''}",
+            f"{f'{Fore.MAGENTA}in random order{Style.RESET_ALL}' if use_random_order else ''}",
         )
         for i in range(to_show):
             word = s[i]

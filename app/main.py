@@ -141,7 +141,9 @@ def helper(state: State):
 
     while inp != "quit" and inp != "exit":
         if state.words_count() == 1:
-            print(f'\n\nThe word must be "{state.words[0]}"\n\n')
+            print(
+                f'\n\n{Fore.MAGENTA}The word must be "{state.words[0]}{Style.RESET_ALL}"\n\n',
+            )
 
         inp = input(
             f"{Fore.GREEN}Enter your input (type help for syntax):{Style.RESET_ALL}",
@@ -153,7 +155,7 @@ def helper(state: State):
         elif inp == "quit" or inp == "exit":
             pass
         elif inp == "reset":
-            print(f"{Fore.GREEN}Resetting helper{Style.RESET_ALL}")
+            print(f"{Fore.MAGENTA}Resetting helper{Style.RESET_ALL}")
             state = State(state.logger)
         elif inp.startswith("define"):
             if state.words_count() == 1:
