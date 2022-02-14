@@ -56,7 +56,10 @@ def remove_words_with_chars(state: State, chars: List[str]):
         for word in words_to_remove:
             state.words.remove(word)
 
-    print(f"Removed {removed} words. Left: {state.words_count()}")
+    print(
+        f"Removed {Fore.MAGENTA}{removed}{Style.RESET_ALL} words. "
+        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    )
 
 
 def update_due_to_misplaced_char(state: State, position: str, misplaced_char: str):
@@ -82,7 +85,10 @@ def update_due_to_misplaced_char(state: State, position: str, misplaced_char: st
     for word in words_to_remove:
         state.words.remove(word)
 
-    print(f"Removed {len(words_to_remove)} words. Left: {state.words_count()}")
+    print(
+        f"Removed {Fore.MAGENTA}{len(words_to_remove)}{Style.RESET_ALL} words. "
+        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    )
 
 
 def update_due_to_found_char(state: State, position: str, found_char: str):
@@ -104,7 +110,10 @@ def update_due_to_found_char(state: State, position: str, found_char: str):
     for word in words_to_remove:
         state.words.remove(word)
 
-    print(f"Removed {len(words_to_remove)} words. Left: {state.words_count()}")
+    print(
+        f"Removed {Fore.MAGENTA}{len(words_to_remove)}{Style.RESET_ALL} words. "
+        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    )
 
 
 def print_help():
@@ -126,7 +135,7 @@ def print_help():
         "\t-{letters}: Remove all words with the given letters (one or more letters to remove)",
     )
     print(
-        "\tdefine [word]: Open the dictionary to define a word. If only one word is left, "
+        "\tdefine [word]: (or d [word]) Open the dictionary to define a word. If only one word is left, "
         "you can omit the word argument from the command",
     )
 
@@ -145,25 +154,31 @@ def helper(state: State):
                 f'\n\n{Fore.MAGENTA}The word must be "{state.words[0]}{Style.RESET_ALL}"\n\n',
             )
 
-        inp = input(
-            f"{Fore.GREEN}Enter your input (type help for syntax):{Style.RESET_ALL}",
-        ).strip()
-        if inp == "show" or inp == "":
+        inp = (
+            input(
+                f"{Fore.GREEN}Enter your input (type help for syntax):{Style.RESET_ALL}",
+            )
+            .strip()
+            .lower()
+        )
+        inp_parts = inp.split()
+        if (
+            inp == "show" or inp == ""
+        ):  # This must be first. Other commands assume inp_parts is not empty
             state.show_suggestions()
-        if inp == "help":
+        elif inp == "help":
             print_help()
         elif inp == "quit" or inp == "exit":
             pass
         elif inp == "reset":
             print(f"{Fore.MAGENTA}Resetting helper{Style.RESET_ALL}")
             state = State(state.logger)
-        elif inp.startswith("define"):
+        elif inp_parts[0] in ("define", "d"):
             if state.words_count() == 1:
                 define(state.words[0])
             else:
-                inp_words = inp.split(" ")
-                if len(inp_words) == 2:
-                    define(inp_words[1])
+                if len(inp_parts) == 2:
+                    define(inp_parts[1])
                 else:
                     print('Usage is: "define <word>"')
         elif len(inp) >= 2 and inp.startswith("-"):
