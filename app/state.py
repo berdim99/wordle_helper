@@ -1,7 +1,7 @@
 import random
 from typing import List, Dict
 
-from colorama import Fore, Style, Back
+from colorama import Fore, Style
 
 import constants
 import logger
@@ -14,7 +14,7 @@ def count_letters_frequency(words: List[str]) -> Dict[str, List[int]]:
         pos = 0
         for letter in word:
             if letter not in out:
-                out[letter] = [0, 0, 0, 0, 0]  # TODO use word length
+                out[letter] = [0] * constants.WORD_LENGTH
 
             out[letter][pos] += 1
             pos += 1
