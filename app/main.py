@@ -6,7 +6,7 @@ import logger
 from constants import WORD_LENGTH
 from state import State
 
-from colorama import init, Fore, Back, Style
+from colorama import init, Fore, Style
 
 
 init()
@@ -209,7 +209,7 @@ def helper(state: State):
 
 if __name__ == "__main__":
     print_help()
-    is_debug = "-d" in sys.argv
+    is_debug = "-d" in sys.argv or "--debug" in sys.argv
     try:
         logger = logger.Logger(
             logger.LogLevel.DEBUG if is_debug else logger.LogLevel.INFO,

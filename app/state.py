@@ -66,6 +66,8 @@ class State:
             f"{Fore.MAGENTA}Showing {to_show}/{self.words_count()} words "
             f"{f'{Style.BRIGHT}in random order' if use_random_order else ''}{Style.RESET_ALL}",
         )
+        max_count = max(sorter.word_to_count.values())
+        width = len(f"{max_count}")
         for i in range(to_show):
             word = s[i]
             pos = 0
@@ -74,10 +76,13 @@ class State:
             for letter in word:
                 freq = letter_freq[letter][pos]
                 total += freq
-                freq_str.append(f"{letter}: {freq}")
+                freq_str.append(f"{letter}:" + "{: >{}}".format(freq, width))
                 pos += 1
 
             if self.logger.is_debug_enabled():
-                self.logger.debug(f"{word} | {', '.join(freq_str)} | total: {total}")
+                self.logger.debug(
+                    f"{word} | {', '.join(freq_str)} "
+                    f"| total: {total} | sort_count: {sorter.word_to_count[word]}",
+                )
             else:
                 self.logger.info(word)

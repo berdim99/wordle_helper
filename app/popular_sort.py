@@ -9,6 +9,7 @@ class PopularSort:
         self.letters_frequency = letters_frequency
         self.word_count = word_count
         self.sort_distribution: Dict[int, int] = {}
+        self.word_to_count: Dict[str, int] = {}
 
     def sort(self, word: str):
         """sorted key function that promotes words with the most popular letters in them, while reducing the
@@ -38,4 +39,5 @@ class PopularSort:
             self.sort_distribution[non_factored_count] = 0
         self.sort_distribution[non_factored_count] += 1
 
+        self.word_to_count[word] = count
         return count
