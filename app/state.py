@@ -70,16 +70,17 @@ class State:
         width = len(f"{max_count}")
         for i in range(to_show):
             word = s[i]
-            pos = 0
-            freq_str = []
-            total = 0
-            for letter in word:
-                freq = letter_freq[letter][pos]
-                total += freq
-                freq_str.append(f"{letter}:" + "{: >{}}".format(freq, width))
-                pos += 1
 
             if self.logger.is_debug_enabled():
+                pos = 0
+                freq_str = []
+                total = 0
+                for letter in word:
+                    freq = letter_freq[letter][pos]
+                    total += freq
+                    freq_str.append(f"{letter}:" + "{: >{}}".format(freq, width))
+                    pos += 1
+
                 self.logger.debug(
                     f"{word} | {', '.join(freq_str)} "
                     f"| total: {total} | sort_count: {sorter.word_to_count[word]}",
