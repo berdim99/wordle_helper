@@ -2,10 +2,12 @@
 
 Help find words for the https://www.powerlanguage.co.uk/wordle/ game
 
-To run the program, install the dependent packages using this command (better use a venv):
+To run the program, first install the dependant packages.
+I'm using [pipenv](https://pipenv.pypa.io/en/latest/) so better install that first, and then run:
 
 ```shell
-pip install -r ./requirements.txt
+pipenv install
+pipenv shell
 ```
 
 And then run `python main.py` in a terminal. It was built with Python 3.8.9
