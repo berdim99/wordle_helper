@@ -151,11 +151,13 @@ def helper(state: State):
                 f'\n\n[magenta]The word must be "{state.words[0]}[/magenta]"\n\n',
             )
 
-        console.print(
-            f"[magenta]Enter your input (type help for syntax):[/magenta]",
-            end=None,
+        inp = (
+            console.input(
+                "[magenta]Enter your input (type help for syntax):[/magenta] ",
+            )
+            .strip()
+            .lower()
         )
-        inp = input(" ").strip().lower()
         inp_parts = inp.split()
         if (
             inp == "show" or inp == ""
