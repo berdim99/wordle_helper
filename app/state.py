@@ -1,8 +1,6 @@
 import random
 from typing import List, Dict
 
-from colorama import Fore, Style
-
 import constants
 import logger
 import popular_sort
@@ -63,8 +61,8 @@ class State:
             s = self.words
 
         self.logger.info(
-            f"{Fore.MAGENTA}Showing {to_show}/{self.words_count()} words "
-            f"{f'{Style.BRIGHT}in random order' if use_random_order else ''}{Style.RESET_ALL}",
+            f"[magenta]Showing {to_show}/{self.words_count()} words "
+            f"{f'in random order' if use_random_order else ''}[/magenta]",
         )
         max_count = max(sorter.word_to_count.values())
         width = len(f"{max_count}")

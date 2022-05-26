@@ -1,5 +1,9 @@
 from enum import Enum
 
+from rich.console import Console
+
+console = Console()
+
 
 class LogLevel(Enum):
     DEBUG = 1
@@ -22,7 +26,7 @@ class Logger:
 
     def log(self, msg: str, log_level: LogLevel) -> None:
         if log_level.value >= self.log_level.value:
-            print(msg)
+            console.print(msg)
 
     def is_debug_enabled(self) -> bool:
         return self.log_level.value <= LogLevel.DEBUG.value

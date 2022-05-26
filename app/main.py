@@ -6,18 +6,15 @@ import logger
 from constants import WORD_LENGTH
 from state import State
 
-from colorama import init, Fore, Style
+from rich.console import Console
 
-
-init()
+console = Console()
 
 
 def validate_is_letter(char: str) -> str:
     """verify that the given character is an alpha letter, return empty string otherwise"""
     if char < "A" or char > "Z":
-        print(
-            f"{Fore.RED}Invalid char {char}. Must be a-z or A-Z. Try again{Style.RESET_ALL}",
-        )
+        console.print(f"[red]Invalid char {char}. Must be a-z or A-Z. Try again[/red]")
         return ""
     return char
 
@@ -25,16 +22,16 @@ def validate_is_letter(char: str) -> str:
 def validate_position(char: str, prefix: str) -> int:
     """validate that the given character is a number between 1 and WORD_LENGTH. return -1 otherwise"""
     if not char.isnumeric():
-        print(
-            f'{Fore.RED}Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
-            f"is a character. Try again{Style.RESET_ALL}",
+        console.print(
+            f'[red]Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
+            f"is a character. Try again[/red]",
         )
         return -1
     position = int(char)
     if position < 1 or position > WORD_LENGTH:
-        print(
-            f'{Fore.RED}Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
-            f"is a character. Try again{Style.RESET_ALL}",
+        console.print(
+            f'[red]Misplaced format is: "{prefix}pc" where p is a number between 1 and {WORD_LENGTH} and c '
+            f"is a character. Try again[/red]",
         )
         return -1
     return position
@@ -56,9 +53,9 @@ def remove_words_with_chars(state: State, chars: List[str]):
         for word in words_to_remove:
             state.words.remove(word)
 
-    print(
-        f"Removed {Fore.MAGENTA}{removed}{Style.RESET_ALL} words. "
-        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    console.print(
+        f"Removed [magenta]{removed}[/magenta] words. "
+        f"Left: [magenta]{state.words_count()}[/magenta]",
     )
 
 
@@ -85,9 +82,9 @@ def update_due_to_misplaced_char(state: State, position: str, misplaced_char: st
     for word in words_to_remove:
         state.words.remove(word)
 
-    print(
-        f"Removed {Fore.MAGENTA}{len(words_to_remove)}{Style.RESET_ALL} words. "
-        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    console.print(
+        f"Removed [magenta]{len(words_to_remove)}[/magenta] words. "
+        f"Left: [magenta]{state.words_count()}[/magenta]",
     )
 
 
@@ -110,38 +107,38 @@ def update_due_to_found_char(state: State, position: str, found_char: str):
     for word in words_to_remove:
         state.words.remove(word)
 
-    print(
-        f"Removed {Fore.MAGENTA}{len(words_to_remove)}{Style.RESET_ALL} words. "
-        f"Left: {Fore.MAGENTA}{state.words_count()}{Style.RESET_ALL}",
+    console.print(
+        f"Removed [magenta]{len(words_to_remove)}[/magenta] words. "
+        f"Left: [magenta]{state.words_count()}[/magenta]",
     )
 
 
 def print_help():
-    print("")
-    print("Usage: enter one of these commands:")
-    print("\tshow or nothing: show word suggestions")
-    print("\thelp: show this help message")
-    print("\treset: reset the words list")
-    print("\tquit or exit: quit the program")
-    print(
+    console.print("")
+    console.print("Usage: enter one of these commands:")
+    console.print("\tshow or nothing: show word suggestions")
+    console.print("\thelp: show this help message")
+    console.print("\treset: reset the words list")
+    console.print("\tquit or exit: quit the program")
+    console.print(
         "\t+{position}{letter}: Remove all words with the letter not in this position."
         ' E.g "+3q" tells us that the letter "q" is in the word at the 3rd letter',
     )
-    print(
+    console.print(
         "\t?{position}{letter}: Remove all words with the letter in this position or not in the word at all."
         ' E.g "?3q" tells us that the letter "q" is in the word, but not the 3rd letter',
     )
-    print(
+    console.print(
         "\t-{letters}: Remove all words with the given letters (one or more letters to remove)",
     )
-    print(
+    console.print(
         "\tdefine [word]: (or d [word]) Open the dictionary to define a word. If only one word is left, "
         "you can omit the word argument from the command",
     )
 
 
 def define(word: str) -> None:
-    print(f"Defining word: {word}")
+    console.print(f"Defining word: {word}")
     webbrowser.open(f"https://www.dictionary.com/browse/{word}")
 
 
@@ -150,17 +147,15 @@ def helper(state: State):
 
     while inp != "quit" and inp != "exit":
         if state.words_count() == 1:
-            print(
-                f'\n\n{Fore.MAGENTA}The word must be "{state.words[0]}{Style.RESET_ALL}"\n\n',
+            console.print(
+                f'\n\n[magenta]The word must be "{state.words[0]}[/magenta]"\n\n',
             )
 
-        inp = (
-            input(
-                f"{Fore.GREEN}Enter your input (type help for syntax):{Style.RESET_ALL}",
-            )
-            .strip()
-            .lower()
+        console.print(
+            f"[magenta]Enter your input (type help for syntax):[/magenta]",
+            end=None,
         )
+        inp = input(" ").strip().lower()
         inp_parts = inp.split()
         if (
             inp == "show" or inp == ""
@@ -171,7 +166,7 @@ def helper(state: State):
         elif inp == "quit" or inp == "exit":
             pass
         elif inp == "reset":
-            print(f"{Fore.MAGENTA}Resetting helper{Style.RESET_ALL}")
+            console.print(f"[magenta]Resetting helper[/magenta]")
             state = State(state.logger)
         elif inp_parts[0] in ("define", "d"):
             if state.words_count() == 1:
@@ -180,15 +175,15 @@ def helper(state: State):
                 if len(inp_parts) == 2:
                     define(inp_parts[1])
                 else:
-                    print('Usage is: "define <word>"')
+                    console.print('Usage is: "define <word>"')
         elif len(inp) >= 2 and inp.startswith("-"):
             # e.g '-A' or '-AB'
             letters = inp[1:].upper()
             to_remove_letters = []
             for letter in letters:
                 if letter in state.found_letters:
-                    print(
-                        f'{Fore.RED}Not removing "{letter}" because it was previously found{Style.RESET_ALL}',
+                    console.print(
+                        f'[red]Not removing "{letter}" because it was previously found[/red]',
                     )
                 else:
                     to_remove_letters.append(letter)
@@ -216,4 +211,4 @@ if __name__ == "__main__":
         )
         helper(State(logger))
     except KeyboardInterrupt:
-        print("\nbye bye")
+        console.print("\nbye bye")
