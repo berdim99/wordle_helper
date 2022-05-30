@@ -118,7 +118,7 @@ def print_help():
     console.print("Usage: enter one of these commands:")
     console.print("\tshow or nothing: show word suggestions")
     console.print("\thelp: show this help message")
-    console.print("\treset: reset the words list")
+    console.print("\treset or r: reset the words list")
     console.print("\tquit or exit: quit the program")
     console.print(
         "\t+{position}{letter}: Remove all words with the letter not in this position."
@@ -167,7 +167,7 @@ def helper(state: State):
             print_help()
         elif inp == "quit" or inp == "exit":
             pass
-        elif inp == "reset":
+        elif inp == "reset" or inp == "r":
             console.print(f"[magenta]Resetting helper[/magenta]")
             state = State(state.logger)
         elif inp_parts[0] in ("define", "d"):
