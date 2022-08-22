@@ -214,3 +214,5 @@ if __name__ == "__main__":
         helper(State(logger))
     except KeyboardInterrupt:
         console.print("\nbye bye")
+    except EOFError:
+        console.print("\nbye bye")
