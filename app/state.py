@@ -76,7 +76,7 @@ class State:
                 for letter in word:
                     freq = letter_freq[letter][pos]
                     total += freq
-                    freq_str.append(f"{letter}:" + "{: >{}}".format(freq, width))
+                    freq_str.append(f"{letter}: " + "{: >{}}".format(freq, width))
                     pos += 1
 
                 self.logger.debug(
