@@ -7,7 +7,7 @@ name = "pypi"
 rich = "==13.1.0"
 
 [dev-packages]
-pre-commit = "==2.21.0"
+pre-commit = "==3.0.1"
 
 [requires]
 python_version = "3.9.6"
