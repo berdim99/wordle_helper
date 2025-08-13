@@ -1,16 +1,15 @@
 # wordle_helper
 
-Help find words for the https://www.powerlanguage.co.uk/wordle/ game
+Help find words for the https://www.nytimes.com/games/wordle/index.html game
 
 To run the program, first install the dependant packages.
-I'm using [pipenv](https://pipenv.pypa.io/en/latest/) so better install that first, and then run:
+I'm using [uv](https://docs.astral.sh/uv/) so better install that first, and then run:
 
 ```shell
-pipenv install
-pipenv shell
+uv sync
 ```
 
-And then run `python main.py` in a terminal. It was built with Python 3.8.9
+And then run `uv run app/main.py` in a terminal. It was built with Python 3.13
 
 To use the helper, play Wordle like you're used to, but after each guess, you can input your leanings to the helper,
 and it will show you a list of words you can choose from.
